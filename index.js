@@ -70,7 +70,16 @@ function createElement(node) {
 }
 
 function createTextNode(text) {
-  return document.createTextNode(text);
+  const textContent = text.textContent.trim();
+
+  // Check if the text content is likely JSON and exceeds a certain length
+  if (textContent.startsWith('{') && textContent.endsWith('}') && textContent.length > 500) {
+    console.log(`Skipping large JSON text node: ${textContent.substring(0, 100)}...`);
+    return document.createTextNode(''); // Return an empty text node
+  }
+
+  console.log(`Processing text node: ${textContent.substring(0, 100)}...`); // Log only the first 100 characters for brevity
+  return document.createTextNode(textContent);
 }
 
 function dfs(node, parentElem) {
