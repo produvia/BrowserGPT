@@ -96,6 +96,7 @@ function getStructure(node) {
 
 async function parseSite(page, options = {}) {
   const html = await (await page.locator('body', {timeout: 1000})).innerHTML();
+  debugTokenLengthByTags(html);
   const root = parse(html, {
     blockTextElements: {
       script: false,
@@ -107,6 +108,25 @@ async function parseSite(page, options = {}) {
   const structure = getStructure(root);
 
   return structure.innerHTML;
+}
+
+function calculateTagTokenLength(html, tag) {
+  const regex = new RegExp(`<${tag}[^>]*>(.*?)</${tag}>`, 'gi');
+  let totalTokenLength = 0;
+
+  let match;
+  while ((match = regex.exec(html)) !== null) {
+    totalTokenLength += estimateTokenLength(match[0]);
+  }
+
+  return totalTokenLength;
+}
+
+function debugTokenLengthByTags(html) {
+  tagsToLog.forEach(tag => {
+    const tokenLength = calculateTagTokenLength(html, tag);
+    console.log(`Token length for <${tag}>: ${tokenLength}`);
+  });
 }
 
 function estimateTokenLength(text) {
@@ -173,7 +193,7 @@ await page.getByText(articleByText, { exact: true }).click(articleByText, {force
     console.log('Error: Token limit exceeded. Please reduce the length of the messages.');
     return;
   }
-  
+
   let code = '';
   try {
     code = await queryGPT(chatApi, [
