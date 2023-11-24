@@ -109,6 +109,19 @@ async function parseSite(page, options = {}) {
   return structure.innerHTML;
 }
 
+function estimateTokenLength(text) {
+  // Roughly estimate token length; OpenAI uses BPE which is complex to replicate exactly
+  const words = text.split(/\s+/);
+  let tokenCount = 0;
+
+  words.forEach(word => {
+    // Rough estimate: Add 1 token for the word, and additional tokens for every 4 characters
+    tokenCount += 1 + Math.ceil(word.length / 4);
+  });
+
+  return tokenCount;
+}
+
 async function queryGPT(chatApi, messages) {
   const completion = await retry(async () => chatApi.call(messages));
   console.log('Comands to be executed'.green);
@@ -149,6 +162,18 @@ const articleByText = 'Show HN';
 await page.getByText(articleByText, { exact: true }).click(articleByText, {force: true, hidden: true});
 \`\`\`
 `;
+  // Calculate the token length of systemPrompt and task
+  const tokenLengthSystemPrompt = estimateTokenLength(systemPrompt);
+  const tokenLengthTask = estimateTokenLength(task);
+  const totalTokenLength = tokenLengthSystemPrompt + tokenLengthTask;
+
+  console.log(`Total token length: ${totalTokenLength}`); // For debugging
+
+  if (totalTokenLength > 128000) {
+    console.log('Error: Token limit exceeded. Please reduce the length of the messages.');
+    return;
+  }
+  
   let code = '';
   try {
     code = await queryGPT(chatApi, [
