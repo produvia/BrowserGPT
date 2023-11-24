@@ -78,7 +78,7 @@ function createTextNode(text) {
     return document.createTextNode(''); // Return an empty text node
   }
 
-  console.log(`Processing text node: ${textContent.substring(0, 100)}...`); // Log only the first 100 characters for brevity
+  // console.log(`Processing text node: ${textContent.substring(0, 100)}...`); // Log only the first 100 characters for brevity
   return document.createTextNode(textContent);
 }
 
@@ -231,6 +231,9 @@ async function main(options) {
   const browser = await chromium.launch({headless: false});
   const browserContext = await browser.newContext();
   const page = await browserContext.newPage();
+
+  page.setDefaultTimeout(60000); // set timeout to 60s (default is 30s)
+
   await page.goto(url);
 
   prompt.message = 'BrowserGPT'.green;
