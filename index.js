@@ -156,13 +156,19 @@ await page.getByText(articleByText, { exact: true }).click(articleByText, {force
       new HumanMessage(task),
     ]);
   } catch (e) {
-    console.log(e.response.data.error);
+    // Check if e.response and e.response.data exist before accessing e.response.data.error
+    if (e.response && e.response.data) {
+      console.log(e.response.data.error);
+    } else {
+      console.log('Error in queryGPT:', e);
+    }
   }
+
   try {
     const func = AsyncFunction('page', code);
     await func(page);
   } catch (e) {
-    console.log(e);
+    console.log('Error in executing code:', e);
   }
 }
 
