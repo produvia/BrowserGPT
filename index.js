@@ -73,8 +73,14 @@ function createTextNode(text) {
   const textContent = text.textContent.trim();
 
   // Check if the text content is likely JSON and exceeds a certain length
-  if (textContent.startsWith('{') && textContent.endsWith('}') && textContent.length > 500) {
-    console.log(`Skipping large JSON text node: ${textContent.substring(0, 100)}...`);
+  if (
+    textContent.startsWith('{') &&
+    textContent.endsWith('}') &&
+    textContent.length > 500
+  ) {
+    console.log(
+      `Skipping large JSON text node: ${textContent.substring(0, 100)}...`
+    );
     return document.createTextNode(''); // Return an empty text node
   }
 
@@ -132,9 +138,9 @@ function calculateTagTokenLength(html, tag) {
 }
 
 function debugTokenLengthByTags(html) {
-  tagsToLog.forEach(tag => {
+  tagsToLog.forEach((tag) => {
     const tokenLength = calculateTagTokenLength(html, tag);
-    console.log(`Token length for <${tag}>: ${tokenLength}`);
+    // console.log(`Token length for <${tag}>: ${tokenLength}`);
   });
 }
 
@@ -143,7 +149,7 @@ function estimateTokenLength(text) {
   const words = text.split(/\s+/);
   let tokenCount = 0;
 
-  words.forEach(word => {
+  words.forEach((word) => {
     // Rough estimate: Add 1 token for the word, and additional tokens for every 4 characters
     tokenCount += 1 + Math.ceil(word.length / 4);
   });
@@ -182,7 +188,9 @@ Current page title is ${await page.evaluate('document.title')}.
 Here is the overview of the site. Format is in html:
 ${await parseSite(page, options)}
 
-Your output should just be the code that is valid for PlayWright page api. When given the option to use a timeout option, use 1s. Except when using page.goto() use 10s. For actions like click, use the force option to click on hidden elements.
+Your output should just be the code that is valid for PlayWright page api. When given the option to use a timeout option, use 1s. Except when using page.goto() use 10s. 
+
+For actions like click, especially in dynamic web applications like LinkedIn, use the force option to interact with elements that are not immediately visible, such as those hidden or nested within dynamic content sections. Ensure the script can handle elements that may need additional actions to become interactable.
 
 User: click on show hn link
 Assistant:
@@ -199,7 +207,9 @@ await page.getByText(articleByText, { exact: true }).click(articleByText, {force
   console.log(`Total token length: ${totalTokenLength}`); // For debugging
 
   if (totalTokenLength > 128000) {
-    console.log('Error: Token limit exceeded. Please reduce the length of the messages.');
+    console.log(
+      'Error: Token limit exceeded. Please reduce the length of the messages.'
+    );
     return;
   }
 
