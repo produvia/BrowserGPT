@@ -1,12 +1,26 @@
-# BrowserGPT
+# Fork of BrowserGPT by Produvia
 
-This project allows you to control your browser using natural language. It integrates OpenAI's GPT-4 with the Playwright library, enabling seamless browser navigation. GPT-4 generates code snippets, which Playwright executes to carry out specified tasks.
+This is a fork of the BrowserGPT project, originally developed by mayt. The primary focus of this version is to enhance its performance and usability specifically for LinkedIn. This adaptation optimizes the integration between OpenAI's GPT-4 and the Playwright library to provide a more streamlined experience when navigating and interacting with LinkedIn.
 
-## Demo
+## Key Changes in This Fork
 
-![BrowserGPT in action](./public/browsergpt.gif)
+1. **Simplified Text Node Handling**: The text node creation process is simplified, removing checks for JSON text nodes and directly returning the text node.
+2. **Removed Default Timeout Setting**: The default 60-second timeout setting for Playwright pages has been removed, which may affect script execution time.
+3. **Removed Debugging and Token Length Calculations**: The fork eliminates functions and logs related to calculating and debugging token lengths in the HTML, leading to cleaner code.
+4. **Dependency Version Adjustment**: The `@playwright/test` package version is downgraded for improved compatibility and performance.
+5. **Streamlined Error Handling and Logging**: The fork simplifies error logging in the GPT query process and removes conditional checks for error objects.
 
-## Installation
+## Areas for Future Improvement
+
+1. **Content Summarization with LLMs**: Integrating models like OpenAI's GPT-4 Turbo could enable the tool to summarize content from web pages more effectively. For instance, it could generate concise summaries of LinkedIn profiles, providing quick insights. This would add significant value to users who need quick information from detailed pages. More about GPT-4 Turbo can be found [here](https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo).
+
+2. **Enhanced Navigation with Multi-modal LLMs**: The use of multi-modal LLMs, such as OpenAI's GPT-4V, could revolutionize how the tool interacts with web pages. These models could analyze visual elements to better navigate complex pages. An application could be taking screenshots of specific sections of a LinkedIn profile or identifying and interacting with visual elements more effectively. Learn more about GPT-4V [here](https://platform.openai.com/docs/guides/vision).
+
+3. **Specialized Code Model Workflows for Advanced DOM Interaction**: Developing workflows using models optimized for code generation, like the OpenAI GPT-4 Turbo model, could significantly improve the tool's ability to navigate hidden elements of the DOM. This would be particularly useful for interacting with elements on LinkedIn that are challenging to access with standard prompts or scripts. This approach could lead to more nuanced and effective automation tasks.
+
+## Installation and Usage
+
+The installation and basic usage remain the same as the original BrowserGPT project. Here's a quick overview:
 
 ### Install the required packages:
 
@@ -14,56 +28,26 @@ This project allows you to control your browser using natural language. It integ
 npm install
 ```
 
-### Create a `.env` file in the project root directory and add the following line:
+### Setup
+
+Create a `.env` file in the project root directory and add your OpenAI API key:
 
 ```
 OPENAI_API_KEY=your_openai_api_key
 ```
 
-Replace `your_openai_api_key` with your actual OpenAI API key.
-
-### Run the script:
+### Running the Script
 
 ```sh
 npm run start
 ```
 
-### Options:
-
-```
-Usage: npm run start -- [options]
-
-Options:
-  -u, --url <url>      url to start on (default: "https://www.google.com")
-  -m, --model <model>  openai model to use (default: "gpt-4-1106-preview")
-  -h, --help           display help for command
-```
-
-## Usage
-
-The script opens a browser window.
-
-In the terminal, you'll be prompted to enter a task.
-
-Type your task using natural language (e.g., "Generate an interesting phrase and type it into Google") and press Enter.
-
-GPT-4 can recognize buttons and text on the page and will navigate the browser to complete the specified task.
-
-To stop the script, press `Ctrl + C` in the terminal.
-
-## Examples
-
-Here are some example tasks you can input:
-
-- `go to hn`
-- `click on the abc article`
-- `enter abc@test.com into the email box. John and Doe in the first and last name boxes respectively`
-- `generate a spicy comment on what xyz said and put it in the comment box`
+You'll be prompted in the terminal to input tasks using natural language. This fork specifically improves interactions with LinkedIn, so feel free to test LinkedIn-specific commands.
 
 ## Limitations
 
-This script serves as a demonstration of GPT-4 and Playwright integration, and may not perform flawlessly for every task or website. Generated code snippets could fail to execute, or the model might not comprehend specific inputs. Consider providing a more detailed task description or rephrasing your input in these situations. Some websites might be too large to fit in the prompt for smaller models like base `gpt-4`, hence we default to `gpt-4-1106-preview` with 125k tokens.
+While this fork is optimized for LinkedIn, it inherits the limitations of the original BrowserGPT project. The accuracy and success of tasks may vary depending on the complexity of the web pages and the specificity of the instructions.
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project, like the original BrowserGPT, is licensed under the MIT License. See the LICENSE file for details.
